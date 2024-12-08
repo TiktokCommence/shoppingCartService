@@ -1,0 +1,212 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Cart API
+    description: The Cart service definition.
+    version: 0.0.1
+paths:
+    /add_commodity:
+        post:
+            tags:
+                - Cart
+            operationId: Cart_AddCommodity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.AddCommodityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.AddCommodityReply'
+    /clear_cart:
+        delete:
+            tags:
+                - Cart
+            operationId: Cart_ClearCart
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.ClearCartRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.ClearCartReply'
+    /delete_commodity:
+        delete:
+            tags:
+                - Cart
+            operationId: Cart_DeleteCommodity
+            parameters:
+                - name: user.userId
+                  in: query
+                  schema:
+                    type: string
+                - name: user.userName
+                  in: query
+                  schema:
+                    type: string
+                - name: commodity.commodityId
+                  in: query
+                  schema:
+                    type: string
+                - name: commodity.commodityName
+                  in: query
+                  schema:
+                    type: string
+                - name: commodity.commodityPrice
+                  in: query
+                  schema:
+                    type: number
+                    format: double
+                - name: commodity.commodityNum
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: commodity.commoditySellerId
+                  in: query
+                  schema:
+                    type: string
+                - name: commodity.commoditySellerName
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.DeleteCommodityReply'
+    /show_cart:
+        get:
+            tags:
+                - Cart
+            operationId: Cart_GetCart
+            parameters:
+                - name: user.userId
+                  in: query
+                  schema:
+                    type: string
+                - name: user.userName
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.GetCartReply'
+    /update_commodity:
+        put:
+            tags:
+                - Cart
+            operationId: Cart_UpdateCommodity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/helloworld.v1.UpdateCommodityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.UpdateCommodityReply'
+components:
+    schemas:
+        helloworld.v1.AddCommodityReply:
+            type: object
+            properties:
+                message:
+                    type: string
+            description: The reply message of add items to user's cart
+        helloworld.v1.AddCommodityRequest:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/helloworld.v1.User'
+                commodity:
+                    $ref: '#/components/schemas/helloworld.v1.Commodity'
+            description: The request of add items to user's cart
+        helloworld.v1.ClearCartReply:
+            type: object
+            properties:
+                message:
+                    type: string
+            description: The reply of clear user's cart
+        helloworld.v1.ClearCartRequest:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/helloworld.v1.User'
+            description: The request of clear user's cart
+        helloworld.v1.Commodity:
+            type: object
+            properties:
+                commodityId:
+                    type: string
+                commodityName:
+                    type: string
+                commodityPrice:
+                    type: number
+                    format: double
+                commodityNum:
+                    type: integer
+                    format: int32
+                commoditySellerId:
+                    type: string
+                commoditySellerName:
+                    type: string
+        helloworld.v1.DeleteCommodityReply:
+            type: object
+            properties:
+                message:
+                    type: string
+            description: The reply message of Delete items to user's cart
+        helloworld.v1.GetCartReply:
+            type: object
+            properties:
+                commodity:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/helloworld.v1.Commodity'
+            description: The reply of show user's cart
+        helloworld.v1.UpdateCommodityReply:
+            type: object
+            properties:
+                message:
+                    type: string
+        helloworld.v1.UpdateCommodityRequest:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/helloworld.v1.User'
+                commodity:
+                    $ref: '#/components/schemas/helloworld.v1.Commodity'
+            description: The request of update items to user's cart
+        helloworld.v1.User:
+            type: object
+            properties:
+                userId:
+                    type: string
+                userName:
+                    type: string
+tags:
+    - name: Cart

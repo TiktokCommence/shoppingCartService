@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package helloworld.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "ShoppingCartService/api/cart/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.cart.v1";
+option java_outer_classname = "CartProtoV1";
+
+// The Cart service definition.
+service Cart {
+  rpc AddCommodity (AddCommodityRequest) returns (AddCommodityReply) {
+    option (google.api.http) = {
+      post: "/add_commodity"
+      body: "*"
+    };
+  }
+
+  rpc UpdateCommodity (UpdateCommodityRequest) returns (UpdateCommodityReply){
+    option (google.api.http) = {
+      put: "/update_commodity"
+      body: "*"
+    };
+  }
+
+  rpc DeleteCommodity (DeleteCommodityRequest) returns (DeleteCommodityReply){
+    option (google.api.http) = {
+      delete: "/delete_commodity"
+    };
+  }
+
+  rpc GetCart (GetCartRequest) returns (GetCartReply){
+    option (google.api.http) = {
+      get: "/show_cart"
+    };
+  }
+
+  rpc ClearCart (ClearCartRequest) returns (ClearCartReply){
+    option (google.api.http) = {
+      delete: "/clear_cart"
+    };
+  }
+}
+
+message User{
+  string user_id = 1;
+  string user_name = 2;
+}
+
+message Commodity{
+  string commodity_id = 1;
+  string commodity_name = 2;
+  double commodity_price = 3;
+  int32 commodity_num = 4;
+  string commodity_seller_id = 5;
+  string commodity_seller_name = 6;
+}
+
+// The request of add items to user's cart
+message AddCommodityRequest{
+  User user = 1; // The buyer of the commodity
+  Commodity commodity = 2;
+}
+
+// The reply message of add items to user's cart
+message AddCommodityReply{
+  string message = 1;
+}
+
+// The request of update items to user's cart
+message UpdateCommodityRequest{
+  User user = 1; // The buyer of the commodity
+  Commodity commodity = 2;
+}
+
+message UpdateCommodityReply{
+  string message = 1;
+}
+
+// The request of Delete items to user's cart
+message DeleteCommodityRequest{
+  User user = 1; // The buyer of the commodity
+  Commodity commodity = 2;
+}
+
+// The reply message of Delete items to user's cart
+message DeleteCommodityReply{
+  string message = 1;
+}
+
+// The request of show user's cart
+message GetCartRequest{
+  User user = 1;
+}
+
+// The reply of show user's cart
+message GetCartReply{
+  repeated Commodity commodity = 1;
+}
+
+// The request of clear user's cart
+message ClearCartRequest{
+  User user = 1;
+}
+
+// The reply of clear user's cart
+message ClearCartReply{
+  string message = 1;
+}
