@@ -8,6 +8,7 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Mysql mysql = 2;
+  Etcd etcd = 3;
 }
 
 message Server {
@@ -30,4 +31,12 @@ message Mysql {
     string dsn = 1;
   }
   Database database = 1;
+}
+
+message Etcd {
+  string endpoints = 1;
+  google.protobuf.Duration dial_timeout = 2;
+  string username = 3;
+  string password = 4;
+  string prefix = 5;
 }

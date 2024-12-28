@@ -7,5 +7,14 @@ services:
       - 3307:3306
     volumes:
       - mysql-data:/var/lib/mysql  # 持久化 MySQL 数据
+  etcd:
+    image: "bitnami/etcd:latest"
+    environment:
+      - ALLOW_NON_AUTHENTICATION=yes
+      - ETCD_ROOT_USER=root
+      - ETCD_ROOT_PASSWORD=123456
+    ports:
+      - "2379:2379"
+
 volumes:
   mysql-data:

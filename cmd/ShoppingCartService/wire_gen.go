@@ -10,6 +10,7 @@ import (
 	"ShoppingCartService/internal/biz"
 	"ShoppingCartService/internal/conf"
 	"ShoppingCartService/internal/data"
+	"ShoppingCartService/internal/registry"
 	"ShoppingCartService/internal/server"
 	"ShoppingCartService/internal/service"
 	"github.com/go-kratos/kratos/v2"
@@ -23,7 +24,7 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, mysql *conf.Mysql, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, mysql *conf.Mysql, etcd *conf.Etcd, logger log.Logger) (*kratos.App, func(), error) {
 	dataData, cleanup, err := data.NewData(mysql, logger)
 	if err != nil {
 		return nil, nil, err
@@ -33,7 +34,8 @@ func wireApp(confServer *conf.Server, mysql *conf.Mysql, logger log.Logger) (*kr
 	cartService := service.NewGreeterService(cartUsecase)
 	grpcServer := server.NewGRPCServer(confServer, cartService, logger)
 	httpServer := server.NewHTTPServer(confServer, cartService, logger)
-	app := newApp(logger, grpcServer, httpServer)
+	etcdRegistry := registry.NewRegistrarServer(etcd)
+	app := newApp(logger, grpcServer, httpServer, etcdRegistry)
 	return app, func() {
 		cleanup()
 	}, nil

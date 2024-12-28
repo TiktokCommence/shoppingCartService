@@ -9,6 +9,7 @@ import (
 	"ShoppingCartService/internal/biz"
 	"ShoppingCartService/internal/conf"
 	"ShoppingCartService/internal/data"
+	"ShoppingCartService/internal/registry"
 	"ShoppingCartService/internal/server"
 	"ShoppingCartService/internal/service"
 
@@ -18,6 +19,6 @@ import (
 )
 
 // wireApp init kratos application.
-func wireApp(*conf.Server, *conf.Mysql, log.Logger) (*kratos.App, func(), error) {
-	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newApp))
+func wireApp(*conf.Server, *conf.Mysql, *conf.Etcd, log.Logger) (*kratos.App, func(), error) {
+	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, registry.ProviderSet, newApp))
 }

@@ -8,3 +8,9 @@ server:
 mysql:
   database:
     dsn: "root:123456@tcp(127.0.0.1:3307)/carts?charset=utf8mb4&parseTime=True&loc=Local"
+etcd:
+  endpoints: "127.0.0.1:2379"
+  username: "root"
+  password: "123456"
+  dial_timeout: 2s
+  prefix: "/tiktok"
