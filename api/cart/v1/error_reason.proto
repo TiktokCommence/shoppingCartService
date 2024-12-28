@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package helloworld.v1;
+package cart.v1;
 
 option go_package = "ShoppingCartService/api/cart/v1;v1";
 option java_multiple_files = true;
 option java_package = "cart.v1";
-option objc_class_prefix = "APIHelloworldV1";
+option objc_class_prefix = "error_reason";
 
 enum ErrorReason {
-  GREETER_UNSPECIFIED = 0;
-  USER_NOT_FOUND = 1;
+  USER_NOT_FOUND = 0;
+  ITEM_NOT_FOUND = 1;
 }

@@ -11,12 +11,12 @@ paths:
         post:
             tags:
                 - Cart
-            operationId: Cart_AddCommodity
+            operationId: Cart_AddItem
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/helloworld.v1.AddCommodityRequest'
+                            $ref: '#/components/schemas/cart.v1.AddItemRequest'
                 required: true
             responses:
                 "200":
@@ -24,17 +24,38 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.AddCommodityReply'
+                                $ref: '#/components/schemas/cart.v1.AddItemReply'
     /clear_cart:
         delete:
             tags:
                 - Cart
             operationId: Cart_ClearCart
+            parameters:
+                - name: user.userId
+                  in: query
+                  schema:
+                    type: string
+                - name: user.userName
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/cart.v1.ClearCartReply'
+    /create_cart:
+        post:
+            tags:
+                - Cart
+            operationId: Cart_CreateCart
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/helloworld.v1.ClearCartRequest'
+                            $ref: '#/components/schemas/cart.v1.CreateCartRequest'
                 required: true
             responses:
                 "200":
@@ -42,12 +63,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.ClearCartReply'
+                                $ref: '#/components/schemas/cart.v1.CreateCartReply'
     /delete_commodity:
         delete:
             tags:
                 - Cart
-            operationId: Cart_DeleteCommodity
+            operationId: Cart_DeleteItem
             parameters:
                 - name: user.userId
                   in: query
@@ -61,35 +82,18 @@ paths:
                   in: query
                   schema:
                     type: string
-                - name: commodity.commodityName
-                  in: query
-                  schema:
-                    type: string
-                - name: commodity.commodityPrice
-                  in: query
-                  schema:
-                    type: number
-                    format: double
                 - name: commodity.commodityNum
                   in: query
                   schema:
                     type: integer
                     format: int32
-                - name: commodity.commoditySellerId
-                  in: query
-                  schema:
-                    type: string
-                - name: commodity.commoditySellerName
-                  in: query
-                  schema:
-                    type: string
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.DeleteCommodityReply'
+                                $ref: '#/components/schemas/cart.v1.DeleteItemReply'
     /show_cart:
         get:
             tags:
@@ -110,17 +114,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.GetCartReply'
+                                $ref: '#/components/schemas/cart.v1.GetCartReply'
     /update_commodity:
         put:
             tags:
                 - Cart
-            operationId: Cart_UpdateCommodity
+            operationId: Cart_UpdateItem
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/helloworld.v1.UpdateCommodityRequest'
+                            $ref: '#/components/schemas/cart.v1.UpdateItemRequest'
                 required: true
             responses:
                 "200":
@@ -128,80 +132,77 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.UpdateCommodityReply'
+                                $ref: '#/components/schemas/cart.v1.UpdateItemReply'
 components:
     schemas:
-        helloworld.v1.AddCommodityReply:
+        cart.v1.AddItemReply:
             type: object
             properties:
                 message:
                     type: string
             description: The reply message of add items to user's cart
-        helloworld.v1.AddCommodityRequest:
+        cart.v1.AddItemRequest:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/helloworld.v1.User'
+                    $ref: '#/components/schemas/cart.v1.User'
                 commodity:
-                    $ref: '#/components/schemas/helloworld.v1.Commodity'
+                    $ref: '#/components/schemas/cart.v1.Commodity'
             description: The request of add items to user's cart
-        helloworld.v1.ClearCartReply:
+        cart.v1.ClearCartReply:
             type: object
             properties:
                 message:
                     type: string
             description: The reply of clear user's cart
-        helloworld.v1.ClearCartRequest:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/helloworld.v1.User'
-            description: The request of clear user's cart
-        helloworld.v1.Commodity:
+        cart.v1.Commodity:
             type: object
             properties:
                 commodityId:
                     type: string
-                commodityName:
-                    type: string
-                commodityPrice:
-                    type: number
-                    format: double
                 commodityNum:
                     type: integer
                     format: int32
-                commoditySellerId:
+        cart.v1.CreateCartReply:
+            type: object
+            properties:
+                message:
                     type: string
-                commoditySellerName:
-                    type: string
-        helloworld.v1.DeleteCommodityReply:
+            description: The reply of create user's cart
+        cart.v1.CreateCartRequest:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/cart.v1.User'
+            description: The request of create user's cart
+        cart.v1.DeleteItemReply:
             type: object
             properties:
                 message:
                     type: string
             description: The reply message of Delete items to user's cart
-        helloworld.v1.GetCartReply:
+        cart.v1.GetCartReply:
             type: object
             properties:
                 commodity:
                     type: array
                     items:
-                        $ref: '#/components/schemas/helloworld.v1.Commodity'
+                        $ref: '#/components/schemas/cart.v1.Commodity'
             description: The reply of show user's cart
-        helloworld.v1.UpdateCommodityReply:
+        cart.v1.UpdateItemReply:
             type: object
             properties:
                 message:
                     type: string
-        helloworld.v1.UpdateCommodityRequest:
+        cart.v1.UpdateItemRequest:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/helloworld.v1.User'
+                    $ref: '#/components/schemas/cart.v1.User'
                 commodity:
-                    $ref: '#/components/schemas/helloworld.v1.Commodity'
+                    $ref: '#/components/schemas/cart.v1.Commodity'
             description: The request of update items to user's cart
-        helloworld.v1.User:
+        cart.v1.User:
             type: object
             properties:
                 userId:

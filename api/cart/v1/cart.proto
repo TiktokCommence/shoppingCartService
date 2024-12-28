@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package helloworld.v1;
+package cart.v1;
 
 import "google/api/annotations.proto";
 
@@ -11,21 +11,21 @@ option java_outer_classname = "CartProtoV1";
 
 // The Cart service definition.
 service Cart {
-  rpc AddCommodity (AddCommodityRequest) returns (AddCommodityReply) {
+  rpc AddItem (AddItemRequest) returns (AddItemReply) {
     option (google.api.http) = {
       post: "/add_commodity"
       body: "*"
     };
   }
 
-  rpc UpdateCommodity (UpdateCommodityRequest) returns (UpdateCommodityReply){
+  rpc UpdateItem (UpdateItemRequest) returns (UpdateItemReply){
     option (google.api.http) = {
       put: "/update_commodity"
       body: "*"
     };
   }
 
-  rpc DeleteCommodity (DeleteCommodityRequest) returns (DeleteCommodityReply){
+  rpc DeleteItem (DeleteItemRequest) returns (DeleteItemReply){
     option (google.api.http) = {
       delete: "/delete_commodity"
     };
@@ -42,6 +42,13 @@ service Cart {
       delete: "/clear_cart"
     };
   }
+
+  rpc CreateCart (CreateCartRequest) returns (CreateCartReply){
+    option (google.api.http) = {
+      post: "/create_cart"
+      body: "*"
+    };
+  }
 }
 
 message User{
@@ -51,42 +58,38 @@ message User{
 
 message Commodity{
   string commodity_id = 1;
-  string commodity_name = 2;
-  double commodity_price = 3;
   int32 commodity_num = 4;
-  string commodity_seller_id = 5;
-  string commodity_seller_name = 6;
 }
 
 // The request of add items to user's cart
-message AddCommodityRequest{
+message AddItemRequest{
   User user = 1; // The buyer of the commodity
   Commodity commodity = 2;
 }
 
 // The reply message of add items to user's cart
-message AddCommodityReply{
+message AddItemReply{
   string message = 1;
 }
 
 // The request of update items to user's cart
-message UpdateCommodityRequest{
+message UpdateItemRequest{
   User user = 1; // The buyer of the commodity
   Commodity commodity = 2;
 }
 
-message UpdateCommodityReply{
+message UpdateItemReply{
   string message = 1;
 }
 
 // The request of Delete items to user's cart
-message DeleteCommodityRequest{
+message DeleteItemRequest{
   User user = 1; // The buyer of the commodity
   Commodity commodity = 2;
 }
 
 // The reply message of Delete items to user's cart
-message DeleteCommodityReply{
+message DeleteItemReply{
   string message = 1;
 }
 
@@ -107,5 +110,15 @@ message ClearCartRequest{
 
 // The reply of clear user's cart
 message ClearCartReply{
+  string message = 1;
+}
+
+// The request of create user's cart
+message CreateCartRequest{
+  User user = 1;
+}
+
+// The reply of create user's cart
+message CreateCartReply{
   string message = 1;
 }

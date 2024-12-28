@@ -19,22 +19,24 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Cart_AddCommodity_FullMethodName    = "/helloworld.v1.Cart/AddCommodity"
-	Cart_UpdateCommodity_FullMethodName = "/helloworld.v1.Cart/UpdateCommodity"
-	Cart_DeleteCommodity_FullMethodName = "/helloworld.v1.Cart/DeleteCommodity"
-	Cart_GetCart_FullMethodName         = "/helloworld.v1.Cart/GetCart"
-	Cart_ClearCart_FullMethodName       = "/helloworld.v1.Cart/ClearCart"
+	Cart_AddItem_FullMethodName    = "/cart.v1.Cart/AddItem"
+	Cart_UpdateItem_FullMethodName = "/cart.v1.Cart/UpdateItem"
+	Cart_DeleteItem_FullMethodName = "/cart.v1.Cart/DeleteItem"
+	Cart_GetCart_FullMethodName    = "/cart.v1.Cart/GetCart"
+	Cart_ClearCart_FullMethodName  = "/cart.v1.Cart/ClearCart"
+	Cart_CreateCart_FullMethodName = "/cart.v1.Cart/CreateCart"
 )
 
 // CartClient is the client API for Cart service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CartClient interface {
-	AddCommodity(ctx context.Context, in *AddCommodityRequest, opts ...grpc.CallOption) (*AddCommodityReply, error)
-	UpdateCommodity(ctx context.Context, in *UpdateCommodityRequest, opts ...grpc.CallOption) (*UpdateCommodityReply, error)
-	DeleteCommodity(ctx context.Context, in *DeleteCommodityRequest, opts ...grpc.CallOption) (*DeleteCommodityReply, error)
+	AddItem(ctx context.Context, in *AddItemRequest, opts ...grpc.CallOption) (*AddItemReply, error)
+	UpdateItem(ctx context.Context, in *UpdateItemRequest, opts ...grpc.CallOption) (*UpdateItemReply, error)
+	DeleteItem(ctx context.Context, in *DeleteItemRequest, opts ...grpc.CallOption) (*DeleteItemReply, error)
 	GetCart(ctx context.Context, in *GetCartRequest, opts ...grpc.CallOption) (*GetCartReply, error)
 	ClearCart(ctx context.Context, in *ClearCartRequest, opts ...grpc.CallOption) (*ClearCartReply, error)
+	CreateCart(ctx context.Context, in *CreateCartRequest, opts ...grpc.CallOption) (*CreateCartReply, error)
 }
 
 type cartClient struct {
@@ -45,27 +47,27 @@ func NewCartClient(cc grpc.ClientConnInterface) CartClient {
 	return &cartClient{cc}
 }
 
-func (c *cartClient) AddCommodity(ctx context.Context, in *AddCommodityRequest, opts ...grpc.CallOption) (*AddCommodityReply, error) {
-	out := new(AddCommodityReply)
-	err := c.cc.Invoke(ctx, Cart_AddCommodity_FullMethodName, in, out, opts...)
+func (c *cartClient) AddItem(ctx context.Context, in *AddItemRequest, opts ...grpc.CallOption) (*AddItemReply, error) {
+	out := new(AddItemReply)
+	err := c.cc.Invoke(ctx, Cart_AddItem_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *cartClient) UpdateCommodity(ctx context.Context, in *UpdateCommodityRequest, opts ...grpc.CallOption) (*UpdateCommodityReply, error) {
-	out := new(UpdateCommodityReply)
-	err := c.cc.Invoke(ctx, Cart_UpdateCommodity_FullMethodName, in, out, opts...)
+func (c *cartClient) UpdateItem(ctx context.Context, in *UpdateItemRequest, opts ...grpc.CallOption) (*UpdateItemReply, error) {
+	out := new(UpdateItemReply)
+	err := c.cc.Invoke(ctx, Cart_UpdateItem_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *cartClient) DeleteCommodity(ctx context.Context, in *DeleteCommodityRequest, opts ...grpc.CallOption) (*DeleteCommodityReply, error) {
-	out := new(DeleteCommodityReply)
-	err := c.cc.Invoke(ctx, Cart_DeleteCommodity_FullMethodName, in, out, opts...)
+func (c *cartClient) DeleteItem(ctx context.Context, in *DeleteItemRequest, opts ...grpc.CallOption) (*DeleteItemReply, error) {
+	out := new(DeleteItemReply)
+	err := c.cc.Invoke(ctx, Cart_DeleteItem_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -90,15 +92,25 @@ func (c *cartClient) ClearCart(ctx context.Context, in *ClearCartRequest, opts .
 	return out, nil
 }
 
+func (c *cartClient) CreateCart(ctx context.Context, in *CreateCartRequest, opts ...grpc.CallOption) (*CreateCartReply, error) {
+	out := new(CreateCartReply)
+	err := c.cc.Invoke(ctx, Cart_CreateCart_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CartServer is the server API for Cart service.
 // All implementations must embed UnimplementedCartServer
 // for forward compatibility
 type CartServer interface {
-	AddCommodity(context.Context, *AddCommodityRequest) (*AddCommodityReply, error)
-	UpdateCommodity(context.Context, *UpdateCommodityRequest) (*UpdateCommodityReply, error)
-	DeleteCommodity(context.Context, *DeleteCommodityRequest) (*DeleteCommodityReply, error)
+	AddItem(context.Context, *AddItemRequest) (*AddItemReply, error)
+	UpdateItem(context.Context, *UpdateItemRequest) (*UpdateItemReply, error)
+	DeleteItem(context.Context, *DeleteItemRequest) (*DeleteItemReply, error)
 	GetCart(context.Context, *GetCartRequest) (*GetCartReply, error)
 	ClearCart(context.Context, *ClearCartRequest) (*ClearCartReply, error)
+	CreateCart(context.Context, *CreateCartRequest) (*CreateCartReply, error)
 	mustEmbedUnimplementedCartServer()
 }
 
@@ -106,20 +118,23 @@ type CartServer interface {
 type UnimplementedCartServer struct {
 }
 
-func (UnimplementedCartServer) AddCommodity(context.Context, *AddCommodityRequest) (*AddCommodityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddCommodity not implemented")
+func (UnimplementedCartServer) AddItem(context.Context, *AddItemRequest) (*AddItemReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddItem not implemented")
 }
-func (UnimplementedCartServer) UpdateCommodity(context.Context, *UpdateCommodityRequest) (*UpdateCommodityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateCommodity not implemented")
+func (UnimplementedCartServer) UpdateItem(context.Context, *UpdateItemRequest) (*UpdateItemReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateItem not implemented")
 }
-func (UnimplementedCartServer) DeleteCommodity(context.Context, *DeleteCommodityRequest) (*DeleteCommodityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteCommodity not implemented")
+func (UnimplementedCartServer) DeleteItem(context.Context, *DeleteItemRequest) (*DeleteItemReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteItem not implemented")
 }
 func (UnimplementedCartServer) GetCart(context.Context, *GetCartRequest) (*GetCartReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCart not implemented")
 }
 func (UnimplementedCartServer) ClearCart(context.Context, *ClearCartRequest) (*ClearCartReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClearCart not implemented")
+}
+func (UnimplementedCartServer) CreateCart(context.Context, *CreateCartRequest) (*CreateCartReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCart not implemented")
 }
 func (UnimplementedCartServer) mustEmbedUnimplementedCartServer() {}
 
@@ -134,56 +149,56 @@ func RegisterCartServer(s grpc.ServiceRegistrar, srv CartServer) {
 	s.RegisterService(&Cart_ServiceDesc, srv)
 }
 
-func _Cart_AddCommodity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddCommodityRequest)
+func _Cart_AddItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CartServer).AddCommodity(ctx, in)
+		return srv.(CartServer).AddItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Cart_AddCommodity_FullMethodName,
+		FullMethod: Cart_AddItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServer).AddCommodity(ctx, req.(*AddCommodityRequest))
+		return srv.(CartServer).AddItem(ctx, req.(*AddItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Cart_UpdateCommodity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateCommodityRequest)
+func _Cart_UpdateItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CartServer).UpdateCommodity(ctx, in)
+		return srv.(CartServer).UpdateItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Cart_UpdateCommodity_FullMethodName,
+		FullMethod: Cart_UpdateItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServer).UpdateCommodity(ctx, req.(*UpdateCommodityRequest))
+		return srv.(CartServer).UpdateItem(ctx, req.(*UpdateItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Cart_DeleteCommodity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteCommodityRequest)
+func _Cart_DeleteItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CartServer).DeleteCommodity(ctx, in)
+		return srv.(CartServer).DeleteItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Cart_DeleteCommodity_FullMethodName,
+		FullMethod: Cart_DeleteItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServer).DeleteCommodity(ctx, req.(*DeleteCommodityRequest))
+		return srv.(CartServer).DeleteItem(ctx, req.(*DeleteItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -224,24 +239,42 @@ func _Cart_ClearCart_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Cart_CreateCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCartRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServer).CreateCart(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Cart_CreateCart_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServer).CreateCart(ctx, req.(*CreateCartRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Cart_ServiceDesc is the grpc.ServiceDesc for Cart service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Cart_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "helloworld.v1.Cart",
+	ServiceName: "cart.v1.Cart",
 	HandlerType: (*CartServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddCommodity",
-			Handler:    _Cart_AddCommodity_Handler,
+			MethodName: "AddItem",
+			Handler:    _Cart_AddItem_Handler,
 		},
 		{
-			MethodName: "UpdateCommodity",
-			Handler:    _Cart_UpdateCommodity_Handler,
+			MethodName: "UpdateItem",
+			Handler:    _Cart_UpdateItem_Handler,
 		},
 		{
-			MethodName: "DeleteCommodity",
-			Handler:    _Cart_DeleteCommodity_Handler,
+			MethodName: "DeleteItem",
+			Handler:    _Cart_DeleteItem_Handler,
 		},
 		{
 			MethodName: "GetCart",
@@ -250,6 +283,10 @@ var Cart_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ClearCart",
 			Handler:    _Cart_ClearCart_Handler,
+		},
+		{
+			MethodName: "CreateCart",
+			Handler:    _Cart_CreateCart_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

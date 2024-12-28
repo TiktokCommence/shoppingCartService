@@ -7,4 +7,4 @@ server:
     timeout: 1s
 mysql:
   database:
-    dsn: "root:123456@tcp(127.0.0.1:3307)/users?charset=utf8mb4&parseTime=True&loc=Local"
+    dsn: "root:123456@tcp(127.0.0.1:3307)/carts?charset=utf8mb4&parseTime=True&loc=Local"
