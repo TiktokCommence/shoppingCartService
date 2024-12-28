@@ -35,10 +35,6 @@ paths:
                   in: query
                   schema:
                     type: string
-                - name: user.userName
-                  in: query
-                  schema:
-                    type: string
             responses:
                 "200":
                     description: OK
@@ -74,10 +70,6 @@ paths:
                   in: query
                   schema:
                     type: string
-                - name: user.userName
-                  in: query
-                  schema:
-                    type: string
                 - name: commodity.commodityId
                   in: query
                   schema:
@@ -101,10 +93,6 @@ paths:
             operationId: Cart_GetCart
             parameters:
                 - name: user.userId
-                  in: query
-                  schema:
-                    type: string
-                - name: user.userName
                   in: query
                   schema:
                     type: string
@@ -206,8 +194,6 @@ components:
             type: object
             properties:
                 userId:
-                    type: string
-                userName:
                     type: string
 tags:
     - name: Cart

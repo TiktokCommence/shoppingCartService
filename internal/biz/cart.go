@@ -12,6 +12,7 @@ import (
 var (
 	// ErrUserNotFound is user not found.
 	ErrUserNotFound = errors.NotFound(v1.ErrorReason_USER_NOT_FOUND.String(), "user not found")
+	ErrUserExist    = errors.NotFound(v1.ErrorReason_ErrorReason_USER_EXIST.String(), "user exist")
 )
 
 type Item struct {
@@ -105,10 +106,9 @@ func (uc *CartUsecase) DeleteCart(ctx context.Context, userId string) error {
 }
 
 func (uc *CartUsecase) CreateCart(ctx context.Context, userId string) error {
-	if ok, err := uc.repo.FindCart(ctx, userId); err != nil {
-		return err
-	} else if !ok {
-		return ErrUserNotFound
+	ok, _ := uc.repo.FindCart(ctx, userId)
+	if ok {
+		return ErrUserExist
 	}
 	return uc.repo.CreateCart(ctx, &Cart{UserId: userId})
 }

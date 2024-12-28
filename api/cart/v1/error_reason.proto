@@ -9,5 +9,5 @@ option objc_class_prefix = "error_reason";
 
 enum ErrorReason {
   USER_NOT_FOUND = 0;
-  ITEM_NOT_FOUND = 1;
+  ErrorReason_USER_EXIST = 1;
 }

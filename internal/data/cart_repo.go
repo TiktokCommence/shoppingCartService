@@ -14,7 +14,7 @@ import (
 // 一个用户对应一个购物车，购物车中有多个商品
 type Cart struct {
 	UserId string `gorm:"primaryKey;type:varchar(64);column:user_id;index:idx_user_item"` // 设置联合索引
-	Items  []Item `gorm:"foreignKey:CartID"`                                              // 外键字段
+	Items  []Item `gorm:"foreignKey:CartID;references:UserId"`                            // 外键字段
 }
 
 // Item 定义嵌套的 Item 结构体
@@ -40,7 +40,7 @@ func NewCartRepo(data *Data, logger log.Logger) biz.CartRepo {
 
 // FindCart 判断购物车是否存在
 func (r *cartRepo) FindCart(ctx context.Context, userId string) (bool, error) {
-	var cart biz.Cart
+	var cart Cart
 	if err := r.data.mysql.WithContext(ctx).Where("user_id = ?", userId).First(&cart).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return false, nil
@@ -51,18 +51,40 @@ func (r *cartRepo) FindCart(ctx context.Context, userId string) (bool, error) {
 }
 
 func (r *cartRepo) CreateCart(ctx context.Context, c *biz.Cart) error {
-	return r.data.mysql.WithContext(ctx).Create(c).Error
+	cart := Cart{
+		UserId: c.UserId,
+		Items:  make([]Item, len(c.Items)),
+	}
+	for i, item := range c.Items {
+		cart.Items[i] = Item{
+			ItemId:   item.ItemId,
+			Quantity: item.Quantity,
+			CartID:   c.UserId,
+		}
+	}
+	return r.data.mysql.WithContext(ctx).Create(&cart).Error
 }
 
 func (r *cartRepo) GetCart(ctx context.Context, userId string) (*biz.Cart, error) {
-	var cart biz.Cart
+	var cart Cart
 	if err := r.data.mysql.WithContext(ctx).Preload("Items").Where("user_id = ?", userId).First(&cart).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
-	return &cart, nil
+	bCart := biz.Cart{
+		UserId: cart.UserId,
+		Items:  make([]biz.Item, len(cart.Items)),
+	}
+	for i, item := range cart.Items {
+		bCart.Items[i] = biz.Item{
+			ItemId:   item.ItemId,
+			Quantity: item.Quantity,
+			CartID:   cart.UserId,
+		}
+	}
+	return &bCart, nil
 }
 
 func (r *cartRepo) SaveCart(ctx context.Context, c *biz.Cart) error {
