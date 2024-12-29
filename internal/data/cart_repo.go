@@ -13,16 +13,16 @@ import (
 // Cart 定义嵌套的 Cart 结构体
 // 一个用户对应一个购物车，购物车中有多个商品
 type Cart struct {
-	UserId string `gorm:"primaryKey;type:varchar(64);column:user_id;index:idx_user_item"` // 设置联合索引
-	Items  []Item `gorm:"foreignKey:CartID;references:UserId"`                            // 外键字段
+	UserId uint64 `gorm:"primaryKey;column:user_id;index:idx_user_item"` // Set as primary key and index
+	Items  []Item `gorm:"foreignKey:CartID;references:UserId"`           // Foreign key field
 }
 
 // Item 定义嵌套的 Item 结构体
 // CartID 为外键字段，关联 Cart 结构体的 UserId 字段
 type Item struct {
-	ItemId   string `gorm:"type:varchar(64);column:item_id;index:idx_user_item"` // 设置联合索引
-	Quantity int32  `gorm:"column:quantity"`                                     // 个数
-	CartID   string `gorm:"column:cart_id"`                                      // 外键字段
+	ItemId   uint64 `gorm:"column:item_id;index:idx_user_item"` // Set as index
+	Quantity int32  `gorm:"column:quantity"`                    // Quantity
+	CartID   uint64 `gorm:"column:cart_id"`                     // Foreign key field
 }
 
 type cartRepo struct {
@@ -39,7 +39,7 @@ func NewCartRepo(data *Data, logger log.Logger) biz.CartRepo {
 }
 
 // FindCart 判断购物车是否存在
-func (r *cartRepo) FindCart(ctx context.Context, userId string) (bool, error) {
+func (r *cartRepo) FindCart(ctx context.Context, userId uint64) (bool, error) {
 	var cart Cart
 	if err := r.data.mysql.WithContext(ctx).Where("user_id = ?", userId).First(&cart).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -65,7 +65,7 @@ func (r *cartRepo) CreateCart(ctx context.Context, c *biz.Cart) error {
 	return r.data.mysql.WithContext(ctx).Create(&cart).Error
 }
 
-func (r *cartRepo) GetCart(ctx context.Context, userId string) (*biz.Cart, error) {
+func (r *cartRepo) GetCart(ctx context.Context, userId uint64) (*biz.Cart, error) {
 	var cart Cart
 	if err := r.data.mysql.WithContext(ctx).Preload("Items").Where("user_id = ?", userId).First(&cart).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -102,7 +102,7 @@ func (r *cartRepo) SaveCart(ctx context.Context, c *biz.Cart) error {
 	})
 }
 
-func (r *cartRepo) ClearCart(ctx context.Context, userId string) error {
+func (r *cartRepo) ClearCart(ctx context.Context, userId uint64) error {
 	return r.data.mysql.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("cart_id = ?", userId).Delete(&biz.Item{}).Error; err != nil {
 			return err
@@ -111,7 +111,7 @@ func (r *cartRepo) ClearCart(ctx context.Context, userId string) error {
 	})
 }
 
-func (r *cartRepo) DeleteCart(ctx context.Context, userId string) error {
+func (r *cartRepo) DeleteCart(ctx context.Context, userId uint64) error {
 	return r.data.mysql.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("user_id = ?", userId).Delete(&biz.Cart{}).Error; err != nil {
 			return err
@@ -123,16 +123,16 @@ func (r *cartRepo) DeleteCart(ctx context.Context, userId string) error {
 	})
 }
 
-func (r *cartRepo) AddItem(ctx context.Context, userId string, item *biz.Item) error {
+func (r *cartRepo) AddItem(ctx context.Context, userId uint64, item *biz.Item) error {
 	item.CartID = userId
 	return r.data.mysql.WithContext(ctx).Create(item).Error
 }
 
-func (r *cartRepo) DeleteItem(ctx context.Context, userId string, itemId string) error {
+func (r *cartRepo) DeleteItem(ctx context.Context, userId uint64, itemId uint64) error {
 	return r.data.mysql.WithContext(ctx).Where("cart_id = ? AND item_id = ?", userId, itemId).Delete(&biz.Item{}).Error
 }
 
-func (r *cartRepo) UpdateItem(ctx context.Context, userId string, item *biz.Item) error {
+func (r *cartRepo) UpdateItem(ctx context.Context, userId uint64, item *biz.Item) error {
 	item.CartID = userId
 	return r.data.mysql.WithContext(ctx).Where("cart_id = ? AND item_id = ?", userId, item.ItemId).Updates(item).Error
 }

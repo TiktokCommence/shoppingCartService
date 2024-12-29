@@ -52,12 +52,12 @@ service Cart {
 }
 
 message User{
-  string user_id = 1;
+  uint64 user_id = 1;
 }
 
 message Commodity{
-  string commodity_id = 1;
-  int32 commodity_num = 4;
+  uint64 commodity_id = 1;
+  int32 commodity_num = 2;
 }
 
 // The request of add items to user's cart

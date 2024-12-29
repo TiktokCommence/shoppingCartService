@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/v2/log"
 
 	v1 "ShoppingCartService/api/cart/v1"
 	"ShoppingCartService/internal/biz"
@@ -11,14 +12,17 @@ import (
 type CartService struct {
 	v1.UnimplementedCartServer
 	uc *biz.CartUsecase
+
+	log *log.Helper
 }
 
 // NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.CartUsecase) *CartService {
-	return &CartService{uc: uc}
+func NewGreeterService(uc *biz.CartUsecase, logger log.Logger) *CartService {
+	return &CartService{uc: uc, log: log.NewHelper(logger)}
 }
 
 func (s *CartService) GetCart(ctx context.Context, req *v1.GetCartRequest) (reply *v1.GetCartReply, err error) {
+	// s.log.WithContext(ctx).Infof("GetCart Received: %v", req.User.GetUserId())
 	cart, err := s.uc.GetCart(ctx, req.User.GetUserId())
 	if err != nil {
 		return nil, err

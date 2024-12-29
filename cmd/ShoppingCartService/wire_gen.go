@@ -31,7 +31,7 @@ func wireApp(confServer *conf.Server, mysql *conf.Mysql, etcd *conf.Etcd, logger
 	}
 	cartRepo := data.NewCartRepo(dataData, logger)
 	cartUsecase := biz.NewCartUsecase(cartRepo, logger)
-	cartService := service.NewGreeterService(cartUsecase)
+	cartService := service.NewGreeterService(cartUsecase, logger)
 	grpcServer := server.NewGRPCServer(confServer, cartService, logger)
 	httpServer := server.NewHTTPServer(confServer, cartService, logger)
 	etcdRegistry := registry.NewRegistrarServer(etcd)
