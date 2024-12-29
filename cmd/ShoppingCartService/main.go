@@ -11,7 +11,6 @@ import (
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
@@ -21,9 +20,9 @@ import (
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name string
+	Name = "ShoppingCartService"
 	// Version is the version of the compiled software.
-	Version string
+	Version = "v1.0.0"
 	// flagconf is the config flag.
 	flagconf string
 
@@ -52,15 +51,6 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, reg *etcd.Regis
 
 func main() {
 	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", id,
-		"service.name", Name,
-		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
-	)
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
@@ -76,6 +66,12 @@ func main() {
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
+
+	logger := log.With(NewLogger(bc.Log),
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+	)
 
 	app, cleanup, err := wireApp(bc.Server, bc.Mysql, bc.Etcd, logger)
 	if err != nil {

@@ -9,6 +9,7 @@ message Bootstrap {
   Server server = 1;
   Mysql mysql = 2;
   Etcd etcd = 3;
+  LogConf log  = 4;
 }
 
 message Server {
@@ -39,4 +40,24 @@ message Etcd {
   string username = 3;
   string password = 4;
   string prefix = 5;
+}
+
+message LogConf {
+  bool stdout =1;//是否打印到控制台
+  message FileConf {
+    string path = 1;
+    string name = 2;
+    int64 maxSize = 3; //单位MB
+    int64 maxBackups = 4;
+    int64 maxAge = 5; //单位天
+    bool compress = 6;//是否压缩
+  }
+  message KafkaConf {
+    repeated string addr = 1;
+    string topic = 2;
+  }
+  bool enableFile =2;
+  bool enableKafka = 3;
+  FileConf file = 4;
+  KafkaConf kafka = 5;
 }
